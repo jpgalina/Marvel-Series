@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:marvel_api/model/series.dart';
 
 const String baseurl = 'https://gateway.marvel.com:443/v1/public';
 const String publicKey = 'c8a07f06021bb59173515f64d26472ca';
@@ -14,23 +15,27 @@ String _hash() {
 }
 
 class API {
-  static Future getSeries() async {
+  static Future<List<Series>> getSeries() async {
     final url =
         '$baseurl/series?limit=100&ts=1&apikey=$publicKey&hash=${_hash()}';
     var headers = {
       'Content-Type': 'application/json',
     };
 
+    List<Series> list = [];
+
     try {
       var response = await http.get(Uri.parse(url), headers: headers);
       if (response.statusCode == 200) {
-        print(response.body);
-        // return response;
+        var jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+        jsonResponse['data']['results']
+            .forEach((series) => list.add(Series.fromJson(series)));
+        return list;
       } else {
         throw Exception(response.body);
       }
     } on Exception catch (e) {
-      print(e);
+      return [];
     }
   }
 }
