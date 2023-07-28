@@ -13,29 +13,32 @@ class Details extends StatelessWidget {
       padding: const EdgeInsets.all(6),
       margin: const EdgeInsets.all(6),
       child: Column(
-          children: detail.map((e) => Card(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 70,
-                  child: Image.network(e["thumbnail"]["path"] + '.${e['thumbnail']['extension']}'),
-                ),
-                if(e["name"] != null)
-                Center(
-                  child: Text(e["name"]),
-                ),
-                if(e["title"] != null)
-                Center(
-                  child: Text(e["title"]),
-                ),
-                if(e["fullName"] != null)
-                Center(
-                  child: Text(e["fullName"]),
-                ),
-              ],
-            ),
-          )).toList(), 
+        children: detail
+            .map((e) => Card(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 70,
+                        child: Image.network(e["thumbnail"]["path"] +
+                            '.${e['thumbnail']['extension']}'),
+                      ),
+                      if (e["name"] != null)
+                        Center(
+                          child: Text(e["name"]),
+                        ),
+                      if (e["title"] != null)
+                        Center(
+                          child: Text(e["title"]),
+                        ),
+                      if (e["fullName"] != null)
+                        Center(
+                          child: Text(e["fullName"]),
+                        ),
+                    ],
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
@@ -44,9 +47,12 @@ class Details extends StatelessWidget {
   Widget build(BuildContext context) {
     final store = Provider.of<DetailsStore>(context);
     final seriesId = ModalRoute.of(context)?.settings.arguments;
-    final series = Provider.of<SeriesListStore>(context).list.where((element) => element.id == seriesId).toList()[0];
+    final series = Provider.of<SeriesListStore>(context)
+        .list
+        .where((element) => element.id == seriesId)
+        .toList()[0];
 
-    if (store.series == null) {
+    if (store.series == null || store.series!.id != seriesId) {
       store.getDetails(series);
     }
 
@@ -90,18 +96,18 @@ class Details extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if(store.series!.comics!.isNotEmpty)
+                        if (store.series!.comics!.isNotEmpty)
                           const Center(child: Text('Comics')),
-                          _renderDetails(store.series!.comics!),
-                          if(store.series!.characters!.isNotEmpty)
+                        _renderDetails(store.series!.comics!),
+                        if (store.series!.characters!.isNotEmpty)
                           const Center(child: Text('Characters')),
-                          _renderDetails(store.series!.characters!),
-                          if(store.series!.events!.isNotEmpty)
+                        _renderDetails(store.series!.characters!),
+                        if (store.series!.events!.isNotEmpty)
                           const Center(child: Text('Events')),
-                          _renderDetails(store.series!.events!),
-                          if(store.series!.creators!.isNotEmpty)
+                        _renderDetails(store.series!.events!),
+                        if (store.series!.creators!.isNotEmpty)
                           const Center(child: Text('Creators')),
-                          _renderDetails(store.series!.creators!),
+                        _renderDetails(store.series!.creators!),
                       ],
                     ),
                   ),

@@ -3,7 +3,7 @@ import 'package:marvel_api/model/series.dart';
 import 'package:marvel_api/routes/routes.dart';
 
 class SeriesWidget extends StatelessWidget {
-  Series series;
+  final Series series;
 
   SeriesWidget({
     required this.series,
@@ -13,7 +13,8 @@ class SeriesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context).pushNamed(MyRoutes.details, arguments: series.id),
+      onTap: () => Navigator.of(context)
+          .pushNamed(MyRoutes.details, arguments: series.id),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
