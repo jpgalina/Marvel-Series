@@ -38,12 +38,12 @@ class MarvelSeries extends StatelessWidget {
       child: MaterialApp(
         title: 'Marvel Series',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
           useMaterial3: true,
         ),
         routes: {
-          MyRoutes.home: (context) => HomePage(),
-          MyRoutes.details: (context) => Details(),
+          MyRoutes.home: (context) => const HomePage(),
+          MyRoutes.details: (context) => const Details(),
         },
         initialRoute: MyRoutes.home,
       ),

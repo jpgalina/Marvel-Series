@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:marvel_api/store/details.store.dart';
 import 'package:marvel_api/store/series_list.store.dart';
-import 'package:marvel_api/widgets/series.dart';
 import 'package:provider/provider.dart';
 
 class Details extends StatelessWidget {
@@ -24,16 +23,34 @@ class Details extends StatelessWidget {
                             '.${e['thumbnail']['extension']}'),
                       ),
                       if (e["name"] != null)
-                        Center(
-                          child: Text(e["name"]),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              e["name"],
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
                       if (e["title"] != null)
-                        Center(
-                          child: Text(e["title"]),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              e["title"],
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
                       if (e["fullName"] != null)
-                        Center(
-                          child: Text(e["fullName"]),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              e["fullName"],
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
                     ],
                   ),
@@ -56,46 +73,66 @@ class Details extends StatelessWidget {
       store.getDetails(series);
     }
 
-    return Observer(builder: (context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Detalhes"),
-        ),
-        body: store.isFetching
-            ? const Center(child: CircularProgressIndicator())
-            : store.fetchError
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                            'Ops! Parece que ocorrreu um problema com a chamada, clique no botão abaixo para tentar novamente.'),
-                        TextButton(
-                            onPressed: () => store.getDetails(series),
-                            child: const Text('Tentar de novo!'))
-                      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Detalhes"),
+      ),
+      body: Column(
+        children: [
+          Text(series.title!),
+          const SizedBox(height: 10),
+          Hero(
+            tag: seriesId!,
+            child: Image.network(
+              series.thumbnail!,
+              height: 250,
+            ),
+          ),
+          if (series.description != null)
+            Container(
+              padding: const EdgeInsets.all(6),
+              margin: const EdgeInsets.all(6),
+              child: Text(
+                series.description!,
+                style: const TextStyle(
+                  fontSize: 12,
+                ),
+                softWrap: true,
+                maxLines: 12,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          Observer(
+            builder: (context) {
+              if (store.isFetching) {
+                return const Column(
+                  children: [
+                    SizedBox(
+                      height: 40,
                     ),
-                  )
-                : SingleChildScrollView(
+                    Center(child: CircularProgressIndicator()),
+                  ],
+                );
+              } else if (store.fetchError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Ops! Parece que ocorrreu um problema com a chamada, clique no botão abaixo para tentar novamente.',
+                      ),
+                      TextButton(
+                        onPressed: () => store.getDetails(series),
+                        child: const Text('Tentar de novo!'),
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Expanded(
+                  child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Text(store.series!.title!),
-                        const SizedBox(height: 10),
-                        Image.network(store.series!.thumbnail!),
-                        if (store.series!.description != null)
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            margin: const EdgeInsets.all(6),
-                            child: Text(
-                              store.series!.description!,
-                              style: const TextStyle(
-                                fontSize: 12,
-                              ),
-                              softWrap: true,
-                              maxLines: 12,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
                         if (store.series!.comics!.isNotEmpty)
                           const Center(child: Text('Comics')),
                         _renderDetails(store.series!.comics!),
@@ -111,7 +148,12 @@ class Details extends StatelessWidget {
                       ],
                     ),
                   ),
-      );
-    });
+                );
+              }
+            },
+          )
+        ],
+      ),
+    );
   }
 }

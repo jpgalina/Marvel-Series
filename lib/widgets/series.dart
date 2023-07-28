@@ -16,30 +16,33 @@ class SeriesWidget extends StatelessWidget {
       onTap: () => Navigator.of(context)
           .pushNamed(MyRoutes.details, arguments: series.id),
       child: Card(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-              ),
-              child: SizedBox(
-                width: 130,
-                height: 70,
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  clipBehavior: Clip.antiAlias,
-                  child: Image.network(
-                    series.thumbnail!,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        'lib/assets/img/marvel-logo.png',
-                      );
-                    },
+            Hero(
+              tag: series.id!,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
+                child: SizedBox(
+                  width: 130,
+                  height: 70,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.network(
+                      series.thumbnail!,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'lib/assets/img/marvel-logo.png',
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
