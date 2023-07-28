@@ -38,4 +38,75 @@ class API {
       return [];
     }
   }
+
+  static Future<Series?> getSeriesById(Series series) async {
+    final charUrl =
+        '$baseurl/series/${series.id}/characters?limit=100&ts=1&apikey=$publicKey&hash=${_hash()}';
+    final comicsUrl =
+        '$baseurl/series/${series.id}/comics?limit=100&ts=1&apikey=$publicKey&hash=${_hash()}';    
+    final eventsUrl =
+        '$baseurl/series/${series.id}/events?limit=100&ts=1&apikey=$publicKey&hash=${_hash()}';
+    final storiesUrl =
+        '$baseurl/series/${series.id}/stories?limit=100&ts=1&apikey=$publicKey&hash=${_hash()}'; 
+    final creatorsUrl =
+        '$baseurl/series/${series.id}/creators?limit=100&ts=1&apikey=$publicKey&hash=${_hash()}';       
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+
+    bool anySuccess = false;
+
+
+    try {
+      var charResponse = await http.get(Uri.parse(charUrl), headers: headers);
+      var comicsResponse = await http.get(Uri.parse(comicsUrl), headers: headers);
+      var eventsResponse = await http.get(Uri.parse(eventsUrl), headers: headers);
+      var storiesResponse = await http.get(Uri.parse(storiesUrl), headers: headers);
+      var creatorsResponse = await http.get(Uri.parse(creatorsUrl), headers: headers);
+
+      if (charResponse.statusCode == 200) {
+        var jsonCharResponse = jsonDecode(utf8.decode(charResponse.bodyBytes));
+        // newSeries = Series.fromJson(jsonResponse['data']['results'][0]);
+        series.characters = jsonCharResponse['data']['results'];
+        anySuccess = true;
+      }
+
+      if (comicsResponse.statusCode == 200) {
+        var jsonComicsResponse = jsonDecode(utf8.decode(comicsResponse.bodyBytes));
+        // newSeries = Series.fromJson(jsonResponse['data']['results'][0]);
+        series.comics = jsonComicsResponse['data']['results'];
+        anySuccess = true;
+      }
+
+      if (eventsResponse.statusCode == 200) {
+        var jsonEventsResponse = jsonDecode(utf8.decode(eventsResponse.bodyBytes));
+        // newSeries = Series.fromJson(jsonResponse['data']['results'][0]);
+        series.events = jsonEventsResponse['data']['results'];
+        anySuccess = true;
+      }
+
+      if (storiesResponse.statusCode == 200) {
+        var jsonStoriesResponse = jsonDecode(utf8.decode(storiesResponse.bodyBytes));
+        // newSeries = Series.fromJson(jsonResponse['data']['results'][0]);
+        series.stories = jsonStoriesResponse['data']['results'];
+        anySuccess = true;
+      }
+
+      if (creatorsResponse.statusCode == 200) {
+        var jsonCreatorsResponse = jsonDecode(utf8.decode(creatorsResponse.bodyBytes));
+        // newSeries = Series.fromJson(jsonResponse['data']['results'][0]);
+        series.creators = jsonCreatorsResponse['data']['results'];
+        anySuccess = true;
+      }
+
+      if(anySuccess){
+        return series;
+      }
+      else {
+        throw Exception();
+      }
+    } on Exception catch (e) {
+      return null;
+    }
+  }
 }

@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:marvel_api/pages/details.dart';
 import 'package:marvel_api/pages/home_page.dart';
 import 'package:marvel_api/routes/routes.dart';
+import 'package:marvel_api/store/details.store.dart';
 import 'package:marvel_api/store/series_list.store.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 void main() {
   runApp(const MarvelSeries());
+  HttpOverrides.global = MyHttpOverrides();
 }
 
 class MarvelSeries extends StatelessWidget {
@@ -17,16 +30,20 @@ class MarvelSeries extends StatelessWidget {
       providers: [
         Provider<SeriesListStore>(
           create: (_) => SeriesListStore(),
+        ),
+        Provider<DetailsStore>(
+          create: (_) => DetailsStore(),
         )
       ],
       child: MaterialApp(
         title: 'Marvel Series',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
           useMaterial3: true,
         ),
         routes: {
           MyRoutes.home: (context) => HomePage(),
+          MyRoutes.details: (context) => Details(),
         },
         initialRoute: MyRoutes.home,
       ),

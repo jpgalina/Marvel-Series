@@ -17,6 +17,9 @@ class HomePage extends StatelessWidget {
 
     return Observer(builder: (context) {
       return Scaffold(
+        appBar: AppBar(
+          title: Text("Series"),
+        ),
         body: store.isFetching
             ? const Center(child: CircularProgressIndicator())
             : store.fetchError
