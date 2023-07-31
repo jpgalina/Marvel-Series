@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:marvel_api/model/series.dart';
-import '../utils/api_utils.dart';
+import 'package:marvel_api/utils/api_utils.dart';
 
 const String publicKey = 'c8a07f06021bb59173515f64d26472ca';
 const String privateKey = 'c6b36ee5eea1d1110c91141a8c10c311d80a1a93';
