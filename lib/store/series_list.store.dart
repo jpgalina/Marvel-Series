@@ -1,5 +1,4 @@
 import 'package:marvel_api/api/api.dart';
-import 'package:marvel_api/model/series.dart';
 import 'package:mobx/mobx.dart';
 
 part 'series_list.store.g.dart';
@@ -8,7 +7,7 @@ class SeriesListStore = _SeriesListStore with _$SeriesListStore;
 
 abstract class _SeriesListStore with Store {
   @observable
-  List<Series> list = [];
+  List list = [];
 
   @observable
   bool isFetching = false;
@@ -23,6 +22,21 @@ abstract class _SeriesListStore with Store {
       stopFetching();
       list = value;
       if (list.isEmpty) {
+        triggerError();
+      } else {
+        reset();
+      }
+    });
+  }
+
+  @action
+  void getMoreSeries() {
+    isFetching = true;
+    int length = list.length;
+    API.getMoreSeries(list).then((value) {
+      stopFetching();
+      list = value;
+      if (list.length == length) {
         triggerError();
       } else {
         reset();

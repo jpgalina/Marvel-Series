@@ -7,6 +7,7 @@ import 'package:marvel_api/store/series_list.store.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
+// Para fazer a chamada na API da marvel pelo note da accenture
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {

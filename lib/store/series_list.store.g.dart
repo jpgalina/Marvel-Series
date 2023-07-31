@@ -12,13 +12,13 @@ mixin _$SeriesListStore on _SeriesListStore, Store {
   late final _$listAtom = Atom(name: '_SeriesListStore.list', context: context);
 
   @override
-  List<Series> get list {
+  List<dynamic> get list {
     _$listAtom.reportRead();
     return super.list;
   }
 
   @override
-  set list(List<Series> value) {
+  set list(List<dynamic> value) {
     _$listAtom.reportWrite(value, super.list, () {
       super.list = value;
     });
@@ -65,6 +65,17 @@ mixin _$SeriesListStore on _SeriesListStore, Store {
         name: '_SeriesListStore.fillList');
     try {
       return super.fillList();
+    } finally {
+      _$_SeriesListStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void getMoreSeries() {
+    final _$actionInfo = _$_SeriesListStoreActionController.startAction(
+        name: '_SeriesListStore.getMoreSeries');
+    try {
+      return super.getMoreSeries();
     } finally {
       _$_SeriesListStoreActionController.endAction(_$actionInfo);
     }

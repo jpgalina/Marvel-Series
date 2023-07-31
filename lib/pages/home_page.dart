@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
     return Observer(builder: (context) {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Series"),
+          title: const Text("Series"),
         ),
         body: store.isFetching
             ? const Center(child: CircularProgressIndicator())
@@ -27,17 +27,25 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                             'Ops! Parece que ocorrreu um problema com a chamada, clique no botão abaixo para tentar novamente.'),
                         TextButton(
                             onPressed: store.fillList,
-                            child: Text('Tentar de novo!'))
+                            child: const Text('Tentar de novo!'))
                       ],
                     ),
                   )
                 : ListView.builder(
-                    itemCount: store.list.length,
+                    itemCount: store.list.length + 1,
                     itemBuilder: (context, index) {
+                      if (index == store.list.length) {
+                        return Center(
+                          child: TextButton(
+                            onPressed: store.getMoreSeries,
+                            child: Text('Carregar mais'),
+                          ),
+                        );
+                      }
                       return SeriesWidget(series: store.list[index]);
                     },
                   ),
